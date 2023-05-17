@@ -16,6 +16,7 @@ import java.util.Set;
 public class Empresa {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Long id;
     
     @Column(nullable = false, unique = true, length = 14)

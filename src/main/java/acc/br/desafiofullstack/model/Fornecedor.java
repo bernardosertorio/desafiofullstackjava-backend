@@ -2,6 +2,10 @@ package acc.br.desafiofullstack.model;
 
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -17,6 +21,7 @@ import jakarta.persistence.OneToOne;
 public class Fornecedor {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Long id;
     
     @Column(nullable = false, unique = true, length = 14)
@@ -34,8 +39,11 @@ public class Fornecedor {
     @ManyToMany(mappedBy = "fornecedores")
     private Set<Empresa> empresas;
     
+    @JsonIgnore
     @OneToOne(mappedBy = "fornecedor", cascade = CascadeType.ALL)
     private FornecedorPessoaFisica pessoaFisica;
+
+    public Fornecedor() {}
 
     public Fornecedor(String cnpj_cpf, String nome, String email, String cep, Set<Empresa> empresas,
             FornecedorPessoaFisica pessoaFisica) {
@@ -100,6 +108,5 @@ public class Fornecedor {
         return "Fornecedor [cnpjCpf=" + cnpj_cpf + ", nome=" + nome + ", email=" + email + ", cep=" + cep + ", empresas="
                 + empresas + ", pessoaFisica=" + pessoaFisica + "]";
     }
-
     
 }

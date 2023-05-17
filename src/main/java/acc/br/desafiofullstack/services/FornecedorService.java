@@ -8,15 +8,30 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 
 import acc.br.desafiofullstack.model.Fornecedor;
+import acc.br.desafiofullstack.model.FornecedorPessoaFisica;
 import acc.br.desafiofullstack.repository.FornecedorRepository;
+import acc.br.desafiofullstack.utils.ValidadorCampos;
 
+import org.springframework.stereotype.Service;
+
+@Service
 public class FornecedorService {
-    
+
     @Autowired
     FornecedorRepository fornecedorRepository;
 
-    public Fornecedor createFornecedor(Fornecedor fornecedor, String cnpjCpf) throws Exception {
+    ValidadorCampos validadorCampos = new ValidadorCampos();
+
+    public Fornecedor createFornecedor(Fornecedor fornecedor) throws Exception {
         try {
+            String cnpjCpf = fornecedor.getCnpjCpf();
+            String cep = fornecedor.getCep();
+            String email = fornecedor.getEmail();
+
+            validadorCampos.validateCPF(cnpjCpf);
+            validadorCampos.validateEmail(email);
+            validadorCampos.validateCEP(cep);
+
             Optional<Fornecedor> fornecedorExist = fornecedorRepository.findByCnpjOrCpf(cnpjCpf);
 
             if (fornecedorExist.isPresent()) {
@@ -31,7 +46,7 @@ public class FornecedorService {
         } catch (DataAccessException e) {
             throw new Exception("Erro de acesso aos dados: " + e.getMessage());
         } catch (Exception e) {
-            throw new Exception("Ocorreu um erro inesperado: " + e.getMessage());
+            throw new Exception(e.getMessage());
         }
     }
 
@@ -50,12 +65,20 @@ public class FornecedorService {
         } catch (DataAccessException e) {
             throw new Exception("Erro de acesso aos dados: " + e.getMessage());
         } catch (Exception e) {
-            throw new Exception("Ocorreu um erro inesperado: " + e.getMessage());
+            throw new Exception(e.getMessage());
         }
     }
 
     public Fornecedor updateFornecedor(Fornecedor fornecedor, long id) throws Exception {
         try {
+            String cnpjCpf = fornecedor.getCnpjCpf();
+            String cep = fornecedor.getCep();
+            String email = fornecedor.getEmail();
+
+            validadorCampos.validateCPF(cnpjCpf);
+            validadorCampos.validateCNPJ(cnpjCpf);
+            validadorCampos.validateEmail(email);
+            validadorCampos.validateCEP(cep);
             Optional<Fornecedor> fornecedorFounded = fornecedorRepository.findById(id);
 
             if (!fornecedorFounded.isPresent()) {
@@ -83,33 +106,57 @@ public class FornecedorService {
         }
     }
 
-    public String getFornecedor(long id) throws Exception {
+    public Fornecedor getFornecedor(long id) throws Exception {
         try {
             Optional<Fornecedor> fornecedor = fornecedorRepository.findById(id);
             if (!fornecedor.isPresent()) {
                 throw new Exception("Fornecedor não encontrado!");
             }
-            return fornecedor.get().toString();
+            return fornecedor.get();
         } catch (HibernateException e) {
             throw new Exception("Erro na execução do Hibernate: " + e.getMessage());
         } catch (DataAccessException e) {
             throw new Exception("Erro de acesso aos dados: " + e.getMessage());
         } catch (Exception e) {
-            throw new Exception("Ocorreu um erro inesperado: " + e.getMessage());
+            throw new Exception(e.getMessage());
         }
     }
 
     public String deleteFornecedor(long id) throws Exception {
         try {
-            fornecedorRepository.deleteById(id);
+            Optional<Fornecedor> fornecedorExist = fornecedorRepository.findById(id);
 
+            if (!fornecedorExist.isPresent()) {
+                throw new Exception("Fornecedor não encontrado!");
+            }
+
+            fornecedorRepository.deleteById(id);
             return "Fornecedor" + id + "deletado.";
         } catch (HibernateException e) {
             throw new Exception("Erro na execução do Hibernate: " + e.getMessage());
         } catch (DataAccessException e) {
             throw new Exception("Erro de acesso aos dados: " + e.getMessage());
         } catch (Exception e) {
-            throw new Exception("Ocorreu um erro inesperado: " + e.getMessage());
+            throw new Exception(e.getMessage());
+        }
+    }
+
+    public Optional<FornecedorPessoaFisica> getFornecedorpf(long id) throws Exception {
+        try {
+            Optional<FornecedorPessoaFisica> fornecedorespf = fornecedorRepository.findByIdFornecedorPF(id);
+
+            if (!fornecedorespf.isPresent()) {
+                throw new Exception("Nenhum fornecedor PF encontrado para esse fornecedor!");
+            }
+
+            return fornecedorespf;
+
+        } catch (HibernateException e) {
+            throw new Exception("Erro na execução do Hibernate: " + e.getMessage());
+        } catch (DataAccessException e) {
+            throw new Exception("Erro de acesso aos dados: " + e.getMessage());
+        } catch (Exception e) {
+            throw new Exception(e.getMessage());
         }
     }
 }

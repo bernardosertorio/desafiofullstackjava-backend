@@ -1,6 +1,7 @@
 package acc.br.desafiofullstack.controllers;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -14,21 +15,22 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import acc.br.desafiofullstack.model.Empresa;
-import acc.br.desafiofullstack.services.EmpresaService;
+import acc.br.desafiofullstack.model.Fornecedor;
+import acc.br.desafiofullstack.model.FornecedorPessoaFisica;
+import acc.br.desafiofullstack.services.FornecedorPessoaFisicaService;
 
 @RestController
-@RequestMapping("empresa")
-public class EmpresaController {
+@RequestMapping("fornecedorpf")
+public class FornecedorPFController {
 
     @Autowired
-    private EmpresaService empresaService;
+    private FornecedorPessoaFisicaService fornecedorPFService;
 
-    @PostMapping("/create")
-    public ResponseEntity createEmpresa(@RequestBody Empresa empresa) {
+    @PostMapping("/create/{id}")
+    public ResponseEntity createFornecedorPF(@RequestBody FornecedorPessoaFisica fornecedorPF, @PathVariable(value = "id") long id) {
         try {
-            Empresa empresaCreated = empresaService.createEmpresa(empresa);
-            return ResponseEntity.ok().body(empresaCreated);
+            Optional<Fornecedor> fornecedorPFCreated = fornecedorPFService.createFornecedorPF(fornecedorPF, id);
+            return ResponseEntity.ok().body(fornecedorPFCreated);
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
@@ -36,10 +38,10 @@ public class EmpresaController {
     }
 
     @GetMapping("/all")
-    public ResponseEntity allEmpresas() {
+    public ResponseEntity allFornecedoresPF() {
         try {
-            List<Empresa> empresas = empresaService.allEmpresas();
-            return ResponseEntity.ok().body(empresas);
+            List<FornecedorPessoaFisica> fornecedoresPF = fornecedorPFService.allfornecedoresPF();
+            return ResponseEntity.ok().body(fornecedoresPF);
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
@@ -48,10 +50,10 @@ public class EmpresaController {
     }
 
     @PutMapping("/update/{id}")
-    public ResponseEntity updateEmpresa(@RequestBody Empresa empresa, @PathVariable(value = "id") long id) {
+    public ResponseEntity updateFornecedorPF(@RequestBody FornecedorPessoaFisica fornecedorpf, @PathVariable(value = "id") long id) {
         try {
-            Empresa empresaUpdated = empresaService.updateEmpresa(empresa, id);
-            return ResponseEntity.ok().body(empresaUpdated);
+            FornecedorPessoaFisica fornecedorPFUpdated = fornecedorPFService.updateFornecedorPF(fornecedorpf, id);
+            return ResponseEntity.ok().body(fornecedorPFUpdated);
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
@@ -59,10 +61,10 @@ public class EmpresaController {
     }
 
     @GetMapping("/get/{id}")
-    public ResponseEntity getEmpresa(@PathVariable(value = "id") long id) {
+    public ResponseEntity getFornecedorPF(@PathVariable(value = "id") long id) {
         try {
-            Empresa empresa = empresaService.getEmpresa(id);
-            return ResponseEntity.ok().body(empresa);
+            Optional<FornecedorPessoaFisica> fornecedorPF = fornecedorPFService.getFornecedorPF(id);
+            return ResponseEntity.ok().body(fornecedorPF);
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
@@ -70,10 +72,10 @@ public class EmpresaController {
     }
 
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity deleteEmpresa(@PathVariable(value = "id") long id) {
+    public ResponseEntity deleteFornecedorPF(@PathVariable(value = "id") long id) {
         try {
-            empresaService.deleteEmpresa(id);
-            return ResponseEntity.ok().body("Empresa" + " " + id + " " + "deletada!");
+            fornecedorPFService.deleteFornecedorPF(id);
+            return ResponseEntity.ok().body("Fornecedor PF" + " " + id + " " + "deletado!");
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());

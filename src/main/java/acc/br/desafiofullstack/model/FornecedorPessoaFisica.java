@@ -10,15 +10,17 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import java.time.LocalDate;
-
+import com.fasterxml.jackson.annotation.JsonIgnore;
 @Entity
 @Table(name = "fornecedor_pessoa_fisica")
 public class FornecedorPessoaFisica {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Long id;
     
     @OneToOne(fetch = FetchType.LAZY)
+    @JsonIgnore
     @JoinColumn(name = "fornecedor_id")
     private Fornecedor fornecedor;
     
@@ -27,6 +29,8 @@ public class FornecedorPessoaFisica {
     
     @Column(nullable = false)
     private LocalDate dataNascimento;
+
+    public FornecedorPessoaFisica() {}
 
     public FornecedorPessoaFisica(Fornecedor fornecedor, String rg, LocalDate dataNascimento) {
         this.fornecedor = fornecedor;
