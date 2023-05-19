@@ -71,11 +71,11 @@ public class FornecedorController {
         }
     }
 
-    @DeleteMapping("/delete/{id}")
-    public ResponseEntity deleteFornecedor(@PathVariable(value = "id") long id) {
+    @DeleteMapping("/delete/{cnpjCpf}")
+    public ResponseEntity deleteFornecedor(@PathVariable(value = "cnpjCpf") String cnpjCpf) {
         try {
-            fornecedorService.deleteFornecedor(id);
-            return ResponseEntity.ok().body("Fornecedor" + " " + id + " " + "deletado!");
+            fornecedorService.deleteFornecedor(cnpjCpf);
+            return ResponseEntity.ok().body("Fornecedor" + " " + cnpjCpf + " " + "deletado!");
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());

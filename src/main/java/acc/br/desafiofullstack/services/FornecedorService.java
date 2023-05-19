@@ -135,16 +135,34 @@ public class FornecedorService {
         }
     }
 
-    public String deleteFornecedor(long id) throws Exception {
+    public String deleteFornecedor(String cnpjCpf) throws Exception {
         try {
-            Optional<Fornecedor> fornecedorExist = fornecedorRepository.findById(id);
+            Boolean isCPF = validadorCampos.isCpf(cnpjCpf);
+
+            if (isCPF) {
+                validadorCampos.validateCPF(cnpjCpf);
+                Optional<Fornecedor> fornecedorExist = fornecedorRepository.findByCnpjOrCpf(cnpjCpf);
+
+                if (!fornecedorExist.isPresent()) {
+                    throw new Exception("Fornecedor não encontrado!");
+                }
+
+                fornecedorRepository.deleteByCnpjOrCpf(cnpjCpf);
+
+                return "Fornecedor" + cnpjCpf + "deletado.";
+            }
+
+            String cnpjVidated = validadorCampos.validateCNPJ(cnpjCpf);
+
+            Optional<Fornecedor> fornecedorExist = fornecedorRepository.findByCnpjOrCpf(cnpjVidated);
 
             if (!fornecedorExist.isPresent()) {
                 throw new Exception("Fornecedor não encontrado!");
             }
 
-            fornecedorRepository.deleteById(id);
-            return "Fornecedor" + id + "deletado.";
+            fornecedorRepository.deleteByCnpjOrCpf(cnpjVidated);
+
+            return "Fornecedor" + cnpjVidated + "deletado.";
         } catch (HibernateException e) {
             throw new Exception("Erro na execução do Hibernate: " + e.getMessage());
         } catch (DataAccessException e) {
