@@ -11,13 +11,13 @@ mysql-connector-j: Biblioteca que permite a conexão com um banco de dados MySQL
 spring-boot-starter-test: Biblioteca do Spring Boot que inclui ferramentas e bibliotecas para testes automatizados. Ela fornece suporte para escrever e executar testes unitários e de integração no seu projeto.
 
 ### Opção 1: Executando via linha de comando
-1. Clone o repositório para sua máquina local: `git clone https://github.com/seu-usuario/seu-projeto.git`
-2. Navegue até o diretório do projeto: `cd seu-projeto`
-3. Execute o projeto: `java MeuProjeto`
+1. Clone o repositório para sua máquina local: `https://github.com/bernardosertorio/desafiofullstackjava-backend.git`
+2. Navegue até o diretório do projeto: `cd desafiofullstackjava-backend`
+3. Execute o projeto: `java desafiofullstackjava-backend`
 
 ### Opção 2: Utilizando uma IDE
 1. Importe o projeto em sua IDE preferida (Eclipse, IntelliJ, VS Code)
-2. Execute a classe principal do projeto chamndo o debugger caso utilize o VS Code.
+2. Execute a classe principal do projeto chamando o debugger caso utilize o VS Code.
 
 ### Requisições HTTP:
 A API está configurada para receber requisições pela porta http://localhost:5173
