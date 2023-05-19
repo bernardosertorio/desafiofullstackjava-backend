@@ -1,4 +1,4 @@
-# Meu Projeto Java
+# Desafio Full-Stack Java (back-end)
 
 ## Descrição
 Projeto para avaliação técnica full-stack. Projeto back-end relação Empresa x Fornecedor.
