@@ -25,10 +25,23 @@ public class FornecedorService {
     public Fornecedor createFornecedor(Fornecedor fornecedor) throws Exception {
         try {
             String cnpjCpf = fornecedor.getCnpjCpf();
+
+            Boolean isCPF = validadorCampos.isCpf(cnpjCpf);
+
+            if (isCPF) {
+                validadorCampos.validateCPF(cnpjCpf);
+            }
+
+            Boolean isCNPJ = validadorCampos.isCnpj(cnpjCpf);
+
+            if (isCNPJ) {
+                String cnpjVidated = validadorCampos.validateCNPJ(cnpjCpf);
+                fornecedor.setCnpjCpf(cnpjVidated);
+            }
+
             String cep = fornecedor.getCep();
             String email = fornecedor.getEmail();
 
-            validadorCampos.validateCPF(cnpjCpf);
             validadorCampos.validateEmail(email);
             validadorCampos.validateCEP(cep);
 

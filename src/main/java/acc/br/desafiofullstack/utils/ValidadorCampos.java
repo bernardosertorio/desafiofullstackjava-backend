@@ -25,6 +25,16 @@ public class ValidadorCampos {
         }
     }
 
+    public boolean isCpf(String value) {
+        String CPF_REGEX = "\\d{3}\\.?\\d{3}\\.?\\d{3}-?\\d{2}";
+        return value.matches(CPF_REGEX);
+    }
+
+    public boolean isCnpj(String value) {
+        String CNPJ_REGEX = "\\d{2}\\.?\\d{3}\\.?\\d{3}/?\\d{4}-?\\d{2}";
+        return value.matches(CNPJ_REGEX);
+    }
+
     public String validateCNPJ(String cnpj) throws Exception {
         try {
             cnpj = cnpj.replaceAll("[^\\d]", "");
@@ -67,9 +77,9 @@ public class ValidadorCampos {
             boolean cnpjCorrect = cnpj.charAt(12) - '0' == digito1 && cnpj.charAt(13) - '0' == digito2;
 
             if (!cnpjCorrect) {
-                throw new Exception("CNPJ inválido!"); 
+                throw new Exception("CNPJ inválido!");
             }
-            
+
             return cnpj;
         } catch (Exception e) {
             throw new Exception(e.getMessage());
@@ -78,41 +88,41 @@ public class ValidadorCampos {
 
     public boolean validateCPF(String cpf) throws Exception {
         try {
-        cpf = cpf.replaceAll("[^\\d]", "");
-    
-        if (cpf.length() != 11) {
-            throw new Exception("CPF inválido!");
+            cpf = cpf.replaceAll("[^\\d]", "");
+
+            if (cpf.length() != 11) {
+                throw new Exception("CPF inválido!");
+            }
+
+            if (cpf.matches("(\\d)\\1*")) {
+                throw new Exception("CPF inválido!");
+            }
+
+            // Calcular o primeiro dígito verificador
+            int soma = 0;
+            int peso = 10;
+            for (int i = 0; i < 9; i++) {
+                int digito = cpf.charAt(i) - '0';
+                soma += digito * peso;
+                peso--;
+            }
+            int digito1 = (soma % 11 < 2) ? 0 : (11 - soma % 11);
+
+            // Calcular o segundo dígito verificador
+            soma = 0;
+            peso = 11;
+            for (int i = 0; i < 10; i++) {
+                int digito = cpf.charAt(i) - '0';
+                soma += digito * peso;
+                peso--;
+            }
+            int digito2 = (soma % 11 < 2) ? 0 : (11 - soma % 11);
+
+            // Verificar se os dígitos verificadores estão corretos
+            return cpf.charAt(9) - '0' == digito1 && cpf.charAt(10) - '0' == digito2;
+        } catch (Exception e) {
+            throw new Exception(e.getMessage());
         }
-    
-        if (cpf.matches("(\\d)\\1*")) {
-            throw new Exception("CPF inválido!");
-        }
-    
-        // Calcular o primeiro dígito verificador
-        int soma = 0;
-        int peso = 10;
-        for (int i = 0; i < 9; i++) {
-            int digito = cpf.charAt(i) - '0';
-            soma += digito * peso;
-            peso--;
-        }
-        int digito1 = (soma % 11 < 2) ? 0 : (11 - soma % 11);
-    
-        // Calcular o segundo dígito verificador
-        soma = 0;
-        peso = 11;
-        for (int i = 0; i < 10; i++) {
-            int digito = cpf.charAt(i) - '0';
-            soma += digito * peso;
-            peso--;
-        }
-        int digito2 = (soma % 11 < 2) ? 0 : (11 - soma % 11);
-    
-        // Verificar se os dígitos verificadores estão corretos
-        return cpf.charAt(9) - '0' == digito1 && cpf.charAt(10) - '0' == digito2;
-    } catch (Exception e) {
-        throw new Exception(e.getMessage());
-    }
     }
 
     public boolean validateRG(String rg) throws Exception {
@@ -124,8 +134,8 @@ public class ValidadorCampos {
             if (rg.length() < tamanhoMinimo || rg.length() > tamanhoMaximo) {
                 throw new Exception("RG inválido!");
             }
-    
-            return true;    
+
+            return true;
         } catch (Exception e) {
             throw new Exception(e.getMessage());
         }
@@ -137,7 +147,7 @@ public class ValidadorCampos {
             if (dataNascimento == null || dataNascimento.isAfter(dataAtual)) {
                 throw new Exception("Data de nascimento inválida!");
             }
-            return true;   
+            return true;
         } catch (Exception e) {
             throw new Exception(e.getMessage());
         }
@@ -161,7 +171,7 @@ public class ValidadorCampos {
             if (!email.matches(regex)) {
                 throw new Exception("E-mail inválido!");
             }
-            return email.matches(regex);   
+            return email.matches(regex);
         } catch (Exception e) {
             throw new Exception(e.getMessage());
         }
