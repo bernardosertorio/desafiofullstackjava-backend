@@ -69,11 +69,11 @@ public class EmpresaController {
         }
     }
 
-    @DeleteMapping("/delete/{id}")
-    public ResponseEntity deleteEmpresa(@PathVariable(value = "id") long id) {
+    @DeleteMapping("/delete/{cnpj}")
+    public ResponseEntity deleteEmpresa(@PathVariable(value = "cnpj") String cnpj) {
         try {
-            empresaService.deleteEmpresa(id);
-            return ResponseEntity.ok().body("Empresa" + " " + id + " " + "deletada!");
+            empresaService.deleteEmpresa(cnpj);
+            return ResponseEntity.ok().body("Empresa" + " " + cnpj + " " + "deletada!");
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());

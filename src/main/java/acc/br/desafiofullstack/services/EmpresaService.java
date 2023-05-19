@@ -114,17 +114,17 @@ public class EmpresaService {
         }
     }
 
-    public String deleteEmpresa(long id) throws Exception {
+    public String deleteEmpresa(String cnpj) throws Exception {
         try {
 
-            Optional<Empresa> empresaExist = empresaRepository.findById(id);
+            Optional<Empresa> empresaExist = empresaRepository.findByCnpj(cnpj);
 
             if (!empresaExist.isPresent()) {
                 throw new Exception("Empresa não encontrada!");
             }
             
-            empresaRepository.deleteById(id);
-            return "Empresa" + id + "deletada.";
+            empresaRepository.deleteByCnpj(cnpj);
+            return "Empresa" + cnpj + "deletada.";
         } catch (HibernateException e) {
             throw new Exception("Erro na execução do Hibernate: " + e.getMessage());
         } catch (DataAccessException e) {
