@@ -6,24 +6,9 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.time.LocalDate;
 
-import acc.br.desafiofullstack.model.CEP;
+import com.google.gson.Gson;
 
 public class ValidadorCampos {
-    private static CEP parsearRespostaCEP(String resposta) throws Exception {
-
-        String[] partes = resposta.split(",");
-        if (partes.length >= 5) {
-            String codigo = partes[0];
-            String logradouro = partes[1];
-            String bairro = partes[2];
-            String cidade = partes[3];
-            String estado = partes[4];
-
-            return new CEP(codigo, logradouro, bairro, cidade, estado);
-        } else {
-            throw new Exception("CEP não encontrado!");
-        }
-    }
 
     public boolean isCpf(String value) {
         String CPF_REGEX = "\\d{3}\\.?\\d{3}\\.?\\d{3}-?\\d{2}";
@@ -177,7 +162,15 @@ public class ValidadorCampos {
         }
     }
 
-    public String validateCEP(String cep) throws Exception {
+    public String removeCaEsCEP(String cep) {
+        String cepSemCaracteresEspeciais = cep.replaceAll("[^0-9-]", "");
+    
+        String cepSemHifen = cepSemCaracteresEspeciais.replaceAll("-", "");
+    
+        return cepSemHifen;
+    } 
+
+    public Object validateCEP(String cep) throws Exception {
         try {
             URL url = new URL("http://cep.la/" + cep);
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
@@ -196,7 +189,10 @@ public class ValidadorCampos {
 
                 String resultadoCEP = response.toString();
 
-                return resultadoCEP;
+                Gson gson = new Gson();
+                Object jsonCep = gson.fromJson(resultadoCEP, Object.class);
+                
+                return jsonCep;
             } else {
                 throw new Exception("CEP não encontrado!");
             }

@@ -43,7 +43,11 @@ public class FornecedorService {
             String email = fornecedor.getEmail();
 
             validadorCampos.validateEmail(email);
-            validadorCampos.validateCEP(cep);
+            Object cepJson = validadorCampos.validateCEP(cep);
+
+            String cepValidated = validadorCampos.removeCaEsCEP(cep);
+
+            fornecedor.setCep(cepValidated);
 
             Optional<Fornecedor> fornecedorExist = fornecedorRepository.findByCnpjOrCpf(cnpjCpf);
 

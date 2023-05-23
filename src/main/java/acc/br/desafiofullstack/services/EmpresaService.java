@@ -38,6 +38,10 @@ public class EmpresaService {
             validadorCampos.validateNomeFantasia(nomeFantasia);
             validadorCampos.validateCEP(cep);
 
+            String cepValidated = validadorCampos.removeCaEsCEP(cep);
+
+            empresa.setCep(cepValidated);
+
             empresaRepository.save(empresa);
 
             return empresa;
